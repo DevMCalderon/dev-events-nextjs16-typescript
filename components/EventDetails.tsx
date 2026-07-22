@@ -5,8 +5,8 @@ import BookEvent from "@/components/BookEvent";
 import EventCard from "@/components/EventCard";
 import { IEvent } from "@/database/event.model";
 import { getSimilarEventsBySlug } from "@/lib/actions/event.actions";
-
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+import Event from "@/database/event.model";
+import connectDB from "@/lib/mongodb";
 
 const EventDetailItem = ({
   icon,
@@ -47,24 +47,26 @@ const EventTags = ({ tags }: { tags: string[] }) => (
 const EventDetails = async ({ params }: { params: Promise<string> }) => {
   const slug = await params;
 
-  const request = await fetch(`${BASE_URL}/api/events/${slug}`);
-  const {
-    event: {
-      description,
-      image,
-      overview,
-      date,
-      time,
-      location,
-      mode,
-      agenda,
-      audience,
-      tags,
-      organizer,
-    },
-  } = await request.json();
+  await connectDB();
+  const event = (await Event.findOne({
+    slug: slug.toLowerCase(),
+  }).lean()) as IEvent | null;
 
-  if (!description) return notFound();
+  if (!event) return notFound();
+
+  const {
+    description,
+    image,
+    overview,
+    date,
+    time,
+    location,
+    mode,
+    agenda,
+    audience,
+    tags,
+    organizer,
+  } = event;
 
   const bookings = 10;
 
