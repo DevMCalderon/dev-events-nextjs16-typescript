@@ -18,7 +18,7 @@ const Page = async () => {
   return (
     <section>
       <h1 className="text-center">
-        The Hub for Every Dev <br /> Event you Can't Miss
+        The Hub for Every Dev <br /> Event you Can&apos;t Miss
       </h1>
       <p className="text-center mt-5">
         Hackatons, Meetups, and Conferences, All in One Place
@@ -33,7 +33,7 @@ const Page = async () => {
           {events &&
             events.length > 0 &&
             events.map((event: IEvent) => (
-              <li key={event.title} className="list-none">
+              <li key={event._id.toString()} className="list-none">
                 <EventCard {...event} />
               </li>
             ))}
